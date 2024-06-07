@@ -37,11 +37,3 @@ async def login_user(response: Response, user_data: SUserAuth):
 async def logout_user(response: Response):
     response.delete_cookie("booking_access_token")
     return "Вы вышли из системы!"
-
-@router.get("/me")
-async def read_users_me(current_user: Users = Depends(get_current_user)):
-    return current_user
-
-@router.get("/all")
-async def read_users_all(current_user: Users = Depends(get_current_admin_user)):
-    return await UsersDAO.find_all()

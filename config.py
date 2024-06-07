@@ -10,8 +10,12 @@ class Settings(BaseSettings):
     JWT_KEY: str
     JWT_ALGORITHM: str
 
+    TEMPLATE_PATH: str
+    STATIC_PATH: str
+    STATIC_IMAGES_PATH: str
+
     class Config:
-        env_file = 'D:/FastAPI/booking_project/.env'
+        env_file = 'D:/FastAPI/booking_project_pet/.env'
 
 
 settings = Settings()
