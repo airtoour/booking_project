@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     JWT_ALGORITHM: str
 
     class Config:
-        env_file = 'D:/LEARNING/ShumeykoFASTAPI/FASTAPI/learn_fastapi/.env'
+        env_file = 'D:/FastAPI/booking_project/.env'
 
 
 settings = Settings()
