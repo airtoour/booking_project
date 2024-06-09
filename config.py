@@ -14,6 +14,16 @@ class Settings(BaseSettings):
     STATIC_PATH: str
     STATIC_IMAGES_PATH: str
 
+    FRONT_PATH: str
+
+    REDIS_HOST: str
+    REDIS_PORT: int
+
+    SMTP_HOST: str
+    SMTP_PORT: int
+    SMTP_USER: str
+    SMTP_PASS: str
+
     class Config:
         env_file = 'D:/FastAPI/booking_project_pet/.env'
 
