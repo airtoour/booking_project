@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, BackgroundTasks
 from datetime import date
 from pydantic import parse_obj_as
 
@@ -23,6 +23,7 @@ async def get_bookings(user: Users = Depends(get_current_user)):
 
 @router.post("")
 async def add_booking(
+        background_tasks: BackgroundTasks,
         room_id: int,
         date_from: date,
         date_to: date,
@@ -34,6 +35,10 @@ async def add_booking(
         raise RoomCannotBeBooked
 
     booking_dict = parse_obj_as(SBooking, booking).dict()
-    send_booking_confirmation_email.delay(booking_dict, settings.SMTP_USER)
+    # Celery
+    # send_booking_confirmation_email.delay(booking_dict, settings.SMTP_USER)
+
+    # BgTasks
+    background_tasks.add_task(send_booking_confirmation_email(booking_dict, settings.SMTP_USER))
 
     return booking_dict
