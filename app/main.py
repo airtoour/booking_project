@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
 
 from app.users.router import router as users
 from app.bookings.router import router as bookings
@@ -21,7 +22,16 @@ from app.admin.auth import authentication_backend
 
 from config import settings
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    redis = aioredis.from_url(f"{settings.REDIS_HOST}", encoding="utf8", decode_responses=True)
+    FastAPICache.init(RedisBackend(redis), prefix="cache")
+    try:
+        yield
+    finally:
+        await redis.close()
+
+app = FastAPI(lifespan=lifespan)
 
 app.mount("/static", StaticFiles(directory=settings.STATIC_PATH), "static")
 
@@ -46,11 +56,6 @@ app.add_middleware(
     allow_headers=["Content-Type", "Set-Cookie", "Access-Control-Allow-Headers",
                    "Authorization", "Access-Control-Allow-Origin"]
 )
-
-@app.on_event("startup")
-async def startup():
-    redis = aioredis.from_url(f"{settings.REDIS_HOST}", encoding="utf8", decode_responses=True)
-    FastAPICache.init(RedisBackend(redis), prefix="cache")
 
 
 admin = Admin(app, engine, authentication_backend=authentication_backend)

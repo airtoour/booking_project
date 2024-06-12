@@ -1,6 +1,12 @@
 from typing import Literal
 
+from pydantic import ConfigDict
 from pydantic_settings import BaseSettings
+from dotenv import load_dotenv
+import os
+
+# Загружаем переменные окружения из .env файла
+load_dotenv()
 
 class Settings(BaseSettings):
     MODE: Literal["DEV", "TEST", "PROD"]
@@ -34,8 +40,7 @@ class Settings(BaseSettings):
     SMTP_USER: str
     SMTP_PASS: str
 
-    class Config:
-        env_file = 'D:/FastAPI/booking_project_pet/.env'
+    model_config = ConfigDict(from_attributes=True)
 
 
 settings = Settings()
