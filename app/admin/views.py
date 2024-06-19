@@ -4,6 +4,7 @@ from app.bookings.models import Bookings
 from app.hotels.models import Hotels
 from app.hotels.rooms.models import Rooms
 
+
 class UsersAdmin(ModelView, model=Users):
     column_list = [Users.id, Users.email, Users.booking]
     column_details_exclude_list = [Users.hashed_password]
