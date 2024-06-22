@@ -7,7 +7,7 @@ from time import sleep
 
 
 from app.tasks.emal_templates import create_booking_confirmation_template
-from config import settings
+from app.config import settings
 
 
 @celery.task

@@ -8,7 +8,7 @@ from app.users.models import Users
 from app.users.dependencies import get_current_user
 from app.exceptions import RoomCannotBeBooked
 from app.tasks.tasks import send_booking_confirmation_email
-from config import settings
+from app.config import settings
 
 router = APIRouter(
     prefix="/bookings",

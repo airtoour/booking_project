@@ -35,10 +35,10 @@ async def login_user(response: Response, user_data: SUserAuth):
 
 
 @router.delete("/delete")
-async def delete_user(response: Response, user_id: Users = Depends(get_current_user)):
-    existing_user = await UsersDAO.find_one_or_none(id=user_id.id)
+async def delete_user(response: Response, user: Users = Depends(get_current_user)):
+    existing_user = await UsersDAO.find_one_or_none(id=user.id)
     if existing_user:
-        await UsersDAO.delete(user_id.id)
+        await UsersDAO.delete(user.id)
         response.delete_cookie("booking_access_token")
     else:
         raise NotExistingUser

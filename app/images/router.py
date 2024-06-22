@@ -2,7 +2,7 @@ from fastapi import APIRouter, UploadFile
 import shutil
 
 from app.tasks.tasks import process_pic
-from config import settings
+from app.config import settings
 
 router = APIRouter(
     prefix="/images",

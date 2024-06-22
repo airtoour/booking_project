@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from fastapi.middleware.cors import CORSMiddleware
+
 from contextlib import asynccontextmanager
 
 from app.users.router import router as users
@@ -20,7 +20,8 @@ from sqladmin import Admin
 from app.admin.views import UsersAdmin, BookingsAdmin, RoomsAdmin, HotelsAdmin
 from app.admin.auth import authentication_backend
 
-from config import settings
+from app.config import settings
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -44,20 +45,6 @@ app.include_router(images)
 app.include_router(hotels)
 
 
-origins = [
-    settings.FRONT_PATH,
-]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allow_headers=["Content-Type", "Set-Cookie", "Access-Control-Allow-Headers",
-                   "Authorization", "Access-Control-Allow-Origin"]
-)
-
-
 admin = Admin(app, engine, authentication_backend=authentication_backend)
 
 admin.add_view(UsersAdmin)
@@ -68,4 +55,4 @@ admin.add_view(HotelsAdmin)
 
 if __name__ == '__main__':
     import uvicorn
-    uvicorn.run(app, host='127.0.0.1', port=8080)
+    uvicorn.run("app.main:app", host='127.0.0.1', port=8080, reload=True)

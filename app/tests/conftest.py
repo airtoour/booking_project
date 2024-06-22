@@ -3,7 +3,6 @@ import json
 import pytest
 from datetime import datetime
 from sqlalchemy import insert
-from fastapi.testclient import TestClient
 from httpx import AsyncClient, ASGITransport
 
 from app.database import Base, async_session_maker, engine
@@ -13,7 +12,7 @@ from app.hotels.rooms.models import Rooms
 from app.users.models import Users
 from app.main import app as fastapi_app
 
-from config import settings
+from app.config import settings
 
 @pytest.fixture(scope="session", autouse=True)
 async def prepare_database():
