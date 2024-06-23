@@ -7,11 +7,11 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from learn_fastapi.app.database import Base, DATABASE_URL
-from learn_fastapi.app.hotels.models import Hotels
-from learn_fastapi.app.rooms.models import Rooms
-from learn_fastapi.app.users.models import Users
-from learn_fastapi.app.bookings.models import Bookings
+from app.database import Base, DATABASE_URL
+from app.hotels.models import Hotels
+from app.hotels.rooms.models import Rooms
+from app.users.models import Users
+from app.bookings.models import Bookings
 
 sys.path.insert(0, dirname(dirname(dirname(abspath(__file__)))))
 
