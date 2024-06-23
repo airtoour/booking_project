@@ -40,6 +40,8 @@ class Settings(BaseSettings):
     SMTP_USER: str
     SMTP_PASS: str
 
+    SENTRY_DSN: str
+
     model_config = ConfigDict(from_attributes=True)
 
 

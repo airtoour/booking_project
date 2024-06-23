@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-
-from contextlib import asynccontextmanager
+from fastapi_versioning import VersionedFastAPI
 
 from app.users.router import router as users
 from app.bookings.router import router as bookings
@@ -23,27 +22,35 @@ from app.admin.auth import authentication_backend
 from app.config import settings
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    redis = aioredis.from_url(f"{settings.REDIS_HOST}", encoding="utf8", decode_responses=True)
-    FastAPICache.init(RedisBackend(redis), prefix="cache")
-    try:
-        yield
-    finally:
-        await redis.close()
-
-app = FastAPI(lifespan=lifespan)
-
-app.mount("/static", StaticFiles(directory=settings.STATIC_PATH), "static")
+app = FastAPI()
 
 app.include_router(users)
 app.include_router(bookings)
 app.include_router(profile)
-
 app.include_router(pages)
 app.include_router(images)
 app.include_router(hotels)
 
+
+@app.on_event("startup")
+async def startup():
+    redis = aioredis.from_url(
+        f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}",
+        encoding="utf8",
+        decode_responses=True
+    )
+    FastAPICache.init(RedisBackend(redis), prefix="cache")
+
+
+app = VersionedFastAPI(
+    app,
+    version_format="{major}",
+    prefix_format="/v{major}",
+    # description='',
+    # middleware=[
+    #     Middleware(SessionMiddleware, secret_key='')
+    # ]
+)
 
 admin = Admin(app, engine, authentication_backend=authentication_backend)
 
@@ -52,7 +59,4 @@ admin.add_view(BookingsAdmin)
 admin.add_view(RoomsAdmin)
 admin.add_view(HotelsAdmin)
 
-
-if __name__ == '__main__':
-    import uvicorn
-    uvicorn.run("app.main:app", host='127.0.0.1', port=8080, reload=True)
+app.mount("/static", StaticFiles(directory=settings.STATIC_PATH), "static")
