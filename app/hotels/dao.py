@@ -7,7 +7,8 @@ from app.dao.base import BaseDAO
 from app.database import async_session_maker
 from app.hotels.models import Hotels
 from app.hotels.rooms.models import Rooms
-# from app.logger import logger
+from app.logger import logger
+from app.database import engine
 
 
 class HotelDAO(BaseDAO):
@@ -46,18 +47,19 @@ class HotelDAO(BaseDAO):
 
         get_hotels_with_rooms = (
             select(
-                Hotels.__table__.columns,
+                cls.model.__table__.columns,
                 booked_hotels.c.rooms_left,
             )
-            .join(booked_hotels, booked_hotels.c.hotel_id == Hotels.id, isouter=True)
+            .join(booked_hotels, booked_hotels.c.hotel_id == cls.model.id, isouter=True)
             .where(
                 and_(
                     booked_hotels.c.rooms_left > 0,
-                    Hotels.location.like(f"%{location}%"),
+                    cls.model.location.like(f"%{location}%"),
                 )
             )
         )
+
         async with async_session_maker() as session:
-            # logger.debug(get_hotels_with_rooms.compile(engine, compile_kwargs={"literal_binds": True}))
+            logger.debug(get_hotels_with_rooms.compile(engine, compile_kwargs={"literal_binds": True}))
             hotels_with_rooms = await session.execute(get_hotels_with_rooms)
             return hotels_with_rooms.mappings().all()

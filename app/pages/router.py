@@ -3,6 +3,7 @@ from fastapi.templating import Jinja2Templates
 from app.config import settings
 from app.hotels.router import get_hotels_by_location_and_time
 
+
 router = APIRouter(
     prefix="/pages",
     tags=["Фронтенд"]

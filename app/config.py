@@ -4,7 +4,7 @@ from pydantic import ConfigDict
 from pydantic_settings import BaseSettings
 from dotenv import load_dotenv
 
-# Загружаем переменные окружения из .env файла
+
 load_dotenv()
 
 class Settings(BaseSettings):

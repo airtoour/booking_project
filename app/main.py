@@ -45,11 +45,7 @@ async def startup():
 app = VersionedFastAPI(
     app,
     version_format="{major}",
-    prefix_format="/v{major}",
-    # description='',
-    # middleware=[
-    #     Middleware(SessionMiddleware, secret_key='')
-    # ]
+    prefix_format="/v{major}"
 )
 
 admin = Admin(app, engine, authentication_backend=authentication_backend)

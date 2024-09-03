@@ -5,7 +5,6 @@ from pydantic import EmailStr
 import smtplib
 from time import sleep
 
-
 from app.tasks.emal_templates import create_booking_confirmation_template
 from app.config import settings
 

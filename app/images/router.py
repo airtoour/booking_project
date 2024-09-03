@@ -4,6 +4,7 @@ import shutil
 from app.tasks.tasks import process_pic
 from app.config import settings
 
+
 router = APIRouter(
     prefix="/images",
     tags=["Загрузка картинок"]
